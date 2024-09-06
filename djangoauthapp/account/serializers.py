@@ -4,7 +4,7 @@ from xml.dom import ValidationErr
 from django.utils.encoding import smart_str, force_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode,urlsafe_base64_encode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-
+from .Utils import Util
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password2= serializers.CharField(style = {'input_type':'password'},write_only =True)
     class Meta:
@@ -63,6 +63,13 @@ class SenderPasswordResetEmailSerializer(serializers.Serializer):
             uid = urlsafe_base64_encode(force_bytes(user.id))
             token = PasswordResetTokenGenerator().make_token(user)
             link = 'http://localhost:3000/api/user/rest/'+uid+'/'+token
+            body ='Click Following link to Reset Your Password'+link
+            data={
+                'subject':'PASSWORD RESET LINK',
+                'body':body,
+                'to_email':user.email
+            }
+            Util.send_email(data)
             return attrs
         else:
             raise ValidationErr('You are not Registered User')
