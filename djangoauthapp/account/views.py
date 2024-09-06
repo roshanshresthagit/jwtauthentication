@@ -69,3 +69,9 @@ class SendPasswordResetEmailView(APIView):
         if serializer.is_valid(raise_exception=True):
             return Response({'msg':'Password Rest link send. Please check your Email'},status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class UserPasswordResetView(APIView):
+    renderer_classes=[UserRenderer]
+    def post(self, request, format= None):
+        pass
